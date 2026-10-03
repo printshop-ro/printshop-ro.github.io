@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ro"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>3D Print – Ofertă din poză / Árajánlat fotóból</title>
+<style>
+:root{--bg:#f6f5f2;--card:#fff;--tx:#1d1d1b;--mu:#6b6a66;--ac:#e8590c;--bd:#e2e0da;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161615;--card:#212120;--tx:#f0efeb;--mu:#a09f9a;--ac:#ff8a4c;--bd:#35342f}}
+:root[data-theme="dark"]{--bg:#161615;--card:#212120;--tx:#f0efeb;--mu:#a09f9a;--ac:#ff8a4c;--bd:#35342f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;max-width:760px;margin:0 auto;padding:14px 16px}
+.logo{font-weight:800;font-size:20px}.lang button{width:auto;display:inline-block;padding:6px 12px;margin-left:6px;background:transparent;color:var(--tx);border:1px solid var(--bd);font-size:14px}.lang button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+main{max-width:760px;margin:0 auto;padding:0 16px 40px}
+h1{font-size:clamp(28px,6vw,42px);line-height:1.15;margin:18px 0 8px}h2{font-size:22px;margin:30px 0 12px}
+.sub{color:var(--mu);font-size:18px;margin:0 0 8px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px}
+.n{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--ac);color:#fff;font-weight:700;margin-bottom:6px}
+.c h3{margin:0 0 4px;font-size:17px}.c p{margin:0;color:var(--mu);font-size:15px}
+button{display:block;width:100%;background:var(--ac);color:#fff;border:0;border-radius:10px;padding:13px;font:600 16px system-ui,sans-serif;cursor:pointer}
+button:disabled{opacity:.5}button.g{background:transparent;color:var(--ac);border:1px solid var(--bd)}
+img{max-width:100%;max-height:300px;border-radius:10px;display:block;margin:0 auto 12px}
+input,textarea{width:100%;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+label{display:block;font-size:13px;color:var(--mu);margin:10px 0 3px}
+.price{font-size:44px;font-weight:800}.mu{color:var(--mu);font-size:14px}
+.row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--bd);font-size:15px}
+.links a{color:var(--ac);margin-right:12px;font-size:14px}.gap{height:10px}
+footer{max-width:760px;margin:0 auto;padding:20px 16px;color:var(--mu);font-size:14px;border-top:1px solid var(--bd)}
+footer a{color:var(--ac)}
+</style></head><body>
+<header><div class="logo" id="brand"></div><div class="lang"><button id="l-ro">RO</button><button id="l-hu">HU</button></div></header>
+<main>
+<h1 data-t="h1"></h1><p class="sub" data-t="sub"></p>
+
+<h2 data-t="hw"></h2>
+<div class="steps">
+<div class="c"><div class="n">1</div><h3 data-t="s1"></h3><p data-t="s1d"></p></div>
+<div class="c"><div class="n">2</div><h3 data-t="s2"></h3><p data-t="s2d"></p></div>
+<div class="c"><div class="n">3</div><h3 data-t="s3"></h3><p data-t="s3d"></p></div>
+</div>
+
+<h2 data-t="qt"></h2>
+<div class="c">
+<input id="f" type="file" accept="image/*" hidden><img id="pv" alt="" hidden>
+<button class="g" id="pick" data-t="pick"></button><div class="gap"></div>
+<button id="go" disabled data-t="go"></button>
+<div id="msg" class="mu" style="margin-top:8px"></div>
+</div>
+
+<div class="c" id="res" hidden style="margin-top:14px">
+<div class="mu" id="item"></div><div class="price" id="price"></div>
+<div id="det" style="margin:8px 0 10px"></div><div class="links" id="lk"></div>
+</div>
+
+<div class="c" id="ord" hidden style="margin-top:14px">
+<label data-t="ct"></label><input id="cn" type="text" autocomplete="name">
+<label data-t="cc"></label><input id="cc" type="text" autocomplete="email">
+<label data-t="nt"></label><textarea id="nt" rows="2"></textarea>
+<div class="gap"></div><button id="want" data-t="want"></button>
+<div id="ok" class="mu" style="margin-top:10px"></div>
+<textarea id="sum" rows="7" readonly hidden style="margin-top:8px"></textarea>
+</div>
+</main>
+<footer><b data-t="fc"></b> · <a id="em"></a> · <a id="ph"></a></footer>
+
+<script>
+/* ===== OWNER CONFIG ===== */
+const CFG={BRAND:"PrintShop",EMAIL:"email@exemplu.ro",PHONE:"+40 700 000 000",
+ PRICE_URL:"",   // webhook: receives {image,lang}, returns {item,size_cm,grams,hours,difficulty,notes,keywords,price}
+ TG_TOKEN:"8951680431:AAF0O47K4XAfOUn9unlDtXKFgUJhWjjGuxY",TG_CHAT:"8997632126",   // Telegram bot token + your chat ID: orders arrive on your Telegram
+ ORDER_URL:"",   // webhook: receives the order and notifies you (Telegram/email)
+ RATE_G:0.6,RATE_H:6,MARGIN:30,MIN:25};
+/* ======================== */
+const T={
+ro:{h1:"Trimite o poză, primești prețul pe loc",sub:"Încarcă o fotografie cu ce îți dorești și îți spunem cât costă printarea 3D.",hw:"Cum funcționează",s1:"Încarcă poza",s1d:"Orice fotografie sau imagine cu obiectul dorit.",s2:"Primești prețul",s2d:"Estimare automată în RON, în câteva secunde.",s3:"Comanzi",s3d:"Apeși butonul, iar noi te contactăm pentru confirmare și printare.",qt:"Cere o ofertă",pick:"Alege o poză",go:"Vezi prețul",an:"Analizăm poza...",note:"Estimare orientativă. Prețul final se confirmă după verificare.",size:"Dimensiune",mat:"Material",time:"Timp de printare",dif:"Dificultate",d:{easy:"ușor",medium:"mediu",hard:"dificil"},ct:"Nume",cc:"Telefon sau email",nt:"Mențiuni (opțional)",want:"Vreau acest produs",sent:"Cererea a fost trimisă! Te contactăm în curând.",need:"Completează numele și un telefon sau email.",fail:"Nu am putut estima poza. Încearcă altă imagine.",manual:"Calculul automat nu este disponibil acum. Trimite cererea și îți răspundem cu prețul.",sendfail:"Trimiterea a eșuat. Încearcă din nou.",demo:"Mod demo: cererea nu a fost trimisă (ORDER_URL lipsește).",fc:"Contact"},
+hu:{h1:"Küldj egy fotót, és azonnal megkapod az árat",sub:"Töltsd fel a kívánt tárgy képét, és megmondjuk, mennyibe kerül a 3D nyomtatás.",hw:"Hogyan működik",s1:"Töltsd fel a képet",s1d:"Bármilyen fénykép vagy kép a kívánt tárgyról.",s2:"Megkapod az árat",s2d:"Automatikus becslés RON-ban, pár másodperc alatt.",s3:"Megrendeled",s3d:"Megnyomod a gombot, mi pedig felvesszük veled a kapcsolatot a megerősítéshez és a nyomtatáshoz.",qt:"Kérj árajánlatot",pick:"Kép kiválasztása",go:"Ár megtekintése",an:"Elemezzük a képet...",note:"Tájékoztató becslés. A végleges árat ellenőrzés után erősítjük meg.",size:"Méret",mat:"Anyag",time:"Nyomtatási idő",dif:"Nehézség",d:{easy:"könnyű",medium:"közepes",hard:"nehéz"},ct:"Név",cc:"Telefonszám vagy e-mail",nt:"Megjegyzés (nem kötelező)",want:"Ezt szeretném",sent:"Kérésedet elküldtük! Hamarosan jelentkezünk.",need:"Add meg a neved és egy telefonszámot vagy e-mail-címet.",fail:"Nem sikerült megbecsülni a képet. Próbálj másikat.",manual:"Az automatikus árazás most nem érhető el. Küldd el a kérést, és megadjuk az árat.",sendfail:"A küldés nem sikerült. Próbáld újra.",demo:"Demó mód: a kérés nem lett elküldve (hiányzik az ORDER_URL).",fc:"Kapcsolat"}};
+const $=i=>document.getElementById(i);
+let L=(navigator.language||"").slice(0,2)==="hu"?"hu":"ro";
+try{L=localStorage.getItem("lang")||L}catch(e){}
+let blob=null,last=null,sample=null;
+function setLang(l){L=l;try{localStorage.setItem("lang",l)}catch(e){}document.documentElement.lang=l;
+ document.querySelectorAll("[data-t]").forEach(e=>e.textContent=T[l][e.dataset.t]);
+ $("l-ro").className=l==="ro"?"on":"";$("l-hu").className=l==="hu"?"on":"";
+ $("brand").textContent="🖨️ "+CFG.BRAND;$("em").textContent=CFG.EMAIL;$("em").href="mailto:"+CFG.EMAIL;$("ph").textContent=CFG.PHONE;$("ph").href="tel:"+CFG.PHONE.replace(/\s/g,"");
+ if(last)show(last)}
+$("l-ro").onclick=()=>setLang("ro");$("l-hu").onclick=()=>setLang("hu");
+(async()=>{try{sample=await claude.use("sample")}catch(e){}})();
+function shrink(f){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const s=Math.min(1,1024/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*s;c.height=im.height*s;c.getContext("2d").drawImage(im,0,0,c.width,c.height);c.toBlob(b=>b?ok(b):no(),"image/jpeg",.82)};im.onerror=no;im.src=URL.createObjectURL(f)})}
+const b64=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)});
+$("pick").onclick=()=>$("f").click();
+$("f").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{blob=await shrink(f)}catch(x){$("msg").textContent=T[L].fail;return}
+ $("pv").src=URL.createObjectURL(blob);$("pv").hidden=false;$("go").disabled=false;$("res").hidden=true;last=null;$("ord").hidden=true;$("msg").textContent=""};
+function show(d){const t=T[L];$("item").textContent=d.item;$("price").textContent=d.price+" RON";
+ $("det").innerHTML=[[t.size,d.size_cm.join(" × ")+" cm"],[t.mat,Math.round(d.grams)+" g"],[t.time,(+d.hours).toFixed(1)+" h"],[t.dif,t.d[d.difficulty]||d.difficulty]].map(r=>`<div class="row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join("")+"<p class='mu'></p>";
+ $("det").lastChild.textContent=(d.notes||"")+" "+t.note;
+ const q=encodeURIComponent(d.keywords||d.item);
+ $("lk").innerHTML=`<a target="_blank" rel="noopener" href="https://www.printables.com/search/models?q=${q}">Printables</a><a target="_blank" rel="noopener" href="https://makerworld.com/en/search/models?keyword=${q}">MakerWorld</a><a target="_blank" rel="noopener" href="https://www.thingiverse.com/search?q=${q}">Thingiverse</a>`;
+ $("res").hidden=false}
+$("go").onclick=async()=>{const t=T[L];$("go").disabled=true;$("msg").textContent=t.an;
+ try{let d;
+  if(CFG.PRICE_URL){const r=await fetch(CFG.PRICE_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({image:await b64(blob),lang:L})});if(!r.ok)throw 0;d=await r.json()}
+  else if(sample){const lg=L==="hu"?"Hungarian":"Romanian";
+   d=await sample.json(`You are a 3D-printing quoting assistant. Look at the image and estimate printing the main object in PLA on a hobby FDM printer at a sensible real-world size (assume ~10 cm tallest side if no scale is visible). Reply with only JSON: {"item":"short name in ${lg}","size_cm":[x,y,z],"grams":number,"hours":number,"difficulty":"easy|medium|hard","notes":"one short sentence in ${lg}, mention supports or splitting if needed","keywords":"3-5 English words to search a printable model"}`,{images:[blob],modelTier:"quick"});
+   d.price=Math.max(CFG.MIN,Math.round((d.grams*CFG.RATE_G+d.hours*CFG.RATE_H)*(1+CFG.MARGIN/100)))}
+  else{$("msg").textContent=t.manual;$("ord").hidden=false;$("go").disabled=false;return}
+  last=d;show(d);$("msg").textContent="";$("ord").hidden=false;
+ }catch(e){$("msg").textContent=t.fail}
+ $("go").disabled=false};
+$("want").onclick=async()=>{const t=T[L],n=$("cn").value.trim(),c=$("cc").value.trim();$("ok").textContent="";
+ if(!n||!c){$("ok").textContent=t.need;return}
+ const o={lang:L,name:n,contact:c,note:$("nt").value,estimate:last,image:await b64(blob)};
+ if(CFG.TG_TOKEN&&CFG.TG_CHAT){$("want").disabled=true;
+  try{const e=last,cap=`🖨️ ${n}\n${c}\n`+(e?`${e.item} - ${e.price} RON\n${e.size_cm.join("x")} cm, ~${Math.round(e.grams)} g, ~${(+e.hours).toFixed(1)} h\nhttps://www.printables.com/search/models?q=${encodeURIComponent(e.keywords||e.item)}\n`:"(manual quote)\n")+(o.note?"\n"+o.note:"");
+   const fd=new FormData();fd.append("chat_id",CFG.TG_CHAT);fd.append("photo",blob,"photo.jpg");fd.append("caption",cap.slice(0,1000));
+   const r=await fetch(`https://api.telegram.org/bot${CFG.TG_TOKEN}/sendPhoto`,{method:"POST",body:fd});if(!r.ok)throw 0;$("ok").textContent=t.sent}
+  catch(x){$("ok").textContent=t.sendfail}
+  $("want").disabled=false;return}
+ if(!CFG.ORDER_URL){$("sum").hidden=false;$("sum").value=`${n} / ${c}\n${last?last.item+" - "+last.price+" RON\n"+last.keywords:"(manual quote)"}\n${o.note}`;$("ok").textContent=t.demo;return}
+ $("want").disabled=true;
+ try{const r=await fetch(CFG.ORDER_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify(o)});if(!r.ok)throw 0;$("ok").textContent=t.sent}catch(e){$("ok").textContent=t.sendfail}
+ $("want").disabled=false};
+setLang(L);
+</script></body></html>
